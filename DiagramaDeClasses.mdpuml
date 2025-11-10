@@ -1,37 +1,72 @@
 @startuml CineReview
 
 abstract class "Midia" {
-+MidiaId
-+Titulo
-+Genero
-+Sinopse
-{abstract} +Duracao
-+ClassificacaoIndicativa
-+DataLancamento
-+Elenco
-+EquipeTecnica
+int +MidiaId
+string +Titulo
+string +Genero
+string +Sinopse
+TimeSpan +Duracao
+string +ClassificacaoIndicativa
+DateOnly +DataLancamento
+Dict<Ator,string> +Elenco
+Dict<Integrante,string> +EquipeTecnica
+List<Avaliacao> +Avaliacoes
+double +NotaGeral
+double +NotaNarrativa
+double +NotaPerformance
+double +NotaComponentesVisuais
+double +NotaComponentesAuditivos
+double +NotaExecucao
 }
 
 class Filme {
 }
 
 class Serie {
++Temporadas
 }
 
 class Temporada {
++Episodios
 }
 
 class Episodio {
 }
 
+class Ator {
++AtorId
++Nome
+}
+
+class Integrante {
++IntegranteId
++Nome
++Cargo
+}
+
 class Usuario{
++UsuarioId
++Email
++Senha
++Favoritos
++Favoritar()
++CadastrarMidia()
+}
+
+class Administrador{
 }
 
 class Avaliacao{
 }
 
+Serie --> Temporada
+Temporada --> Episodio
+Midia --> Avaliacao
 Avaliacao --> Usuario
+Usuario <|-- Administrador
 Midia <|-- Filme
 Midia <|-- Serie
+Midia --> Ator
+Midia --> Integrante
 
 @enduml
