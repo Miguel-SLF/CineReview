@@ -1,98 +1,187 @@
-@startuml CineReview
+@startuml
+' Configurações de aparência para clareza
+skinparam classAttributeIconSize 0
+hide empty members
+skinparam linetype ortho
 
-abstract class "Midia" {
-int +MidiaId
-string +Titulo
-string +Genero
-string +Sinopse
-TimeSpan +Duracao
-string +ClassificacaoIndicativa
-DateOnly +DataLancamento
-Dict<Ator,string> +Elenco
-Dict<Integrante,string> +EquipeTecnica
-List<Avaliacao> +Avaliacoes
-double +NotaGeral
-double +NotaNarrativa
-double +NotaPerformance
-double +NotaComponentesVisuais
-double +NotaComponentesAuditivos
-double +NotaExecucao
+' ---------- Classes de Usuário ----------
+
+class Usuario {
+  +Id : Guid
+  +NomeUsuario : string
+  +Email : string
+  -SenhaHash : string
+  +ValidarSenha(senha : string) : bool
+  +DefinirSenha(novaSenha : string)
+  +FavoritarMidia(midia : Mídia)
+  +RemoverFavorito(midiaId : Guid)
+}
+
+class Administrador {
+  +CadastrarMidia(midia : Mídia) : bool
+  +EditarMidia(midia : Mídia) : bool
+  +RemoverMidia(midiaId : Guid) : bool
+}
+
+Usuario <|-- Administrador
+
+' ---------- Interface Avaliável ----------
+
+interface IAvaliavel {
+  +Avaliacoes : List<Avaliacao>
+  +{abstract} NotaMediaGeral : double { get; }
+  +{abstract} NotaMediaNarrativa : double { get; }
+  +{abstract} NotaMediaExecucao : double { get; }
+  +{abstract} NotaMediaVisual : double { get; }
+  +{abstract} NotaMediaAuditiva : double { get; }
+  +AdicionarAvaliacao(avaliacao : Avaliacao)
+}
+
+' ---------- Classes de Mídia ----------
+
+abstract class Mídia {
+  +Id : Guid
+  +Titulo : string
+  +Genero : string
+  +Sinopse : string
+  +Duracao : TimeSpan
+  +ClassificacaoIndicativa : string
+  +DataLancamento : DateTime
+  ' Propriedades abstratas para as médias
+  +{abstract} NotaMediaGeral : double { get; }
+  +{abstract} NotaMediaNarrativa : double { get; }
+  +{abstract} NotaMediaExecucao : double { get; }
+  +{abstract} NotaMediaVisual : double { get; }
+  +{abstract} NotaMediaAuditiva : double { get; }
 }
 
 class Filme {
+  ' Propriedades {override} que implementam Mídia e IAvaliavel
+  +{override} NotaMediaGeral : double { get; }
+  +{override} NotaMediaNarrativa : double { get; }
+  +{override} NotaMediaExecucao : double { get; }
+  +{override} NotaMediaVisual : double { get; }
+  +{override} NotaMediaAuditiva : double { get; }
+  ' Implementação da interface
+  +Avaliacoes : List<Avaliacao>
+  +AdicionarAvaliacao(avaliacao : Avaliacao)
 }
 
-class Serie {
-+Temporadas
+class Série {
+  ' Propriedades {override} que calculam a média das temporadas
+  +{override} NotaMediaGeral : double { get; }
+  +{override} NotaMediaNarrativa : double { get; }
+  +{override} NotaMediaExecucao : double { get; }
+  +{override} NotaMediaVisual : double { get; }
+  +{override} NotaMediaAuditiva : double { get; }
 }
 
 class Temporada {
-+Episodios
+  +Id : Guid
+  +NumeroTemporada : int
+  +Titulo : string
+  ' Implementação da interface
+  +Avaliacoes : List<Avaliacao>
+  +NotaMediaGeral : double { get; }
+  +NotaMediaNarrativa : double { get; }
+  +NotaMediaExecucao : double { get; }
+  +NotaMediaVisual : double { get; }
+  +NotaMediaAuditiva : double { get; }
+  +AdicionarAvaliacao(avaliacao : Avaliacao)
 }
 
-class Episodio {
+class Episódio {
+  +Id : Guid
+  +NumeroEpisodio : int
+  +Titulo : string
+  +Duracao : TimeSpan
+}
+
+' Herança de Mídia
+Mídia <|-- Filme
+Mídia <|-- Série
+
+' Implementação da Interface
+IAvaliavel <|.. Filme
+IAvaliavel <|.. Temporada
+
+' ---------- Classe de Avaliação ----------
+
+class Avaliacao {
+  +Id : Guid
+  +DataAvaliacao : DateTime
+  +UsuarioId : Guid ' Chave estrangeira
+  
+  ' Notas de Narrativa (0-10)
+  +NotaTrama : double
+  +NotaRitmo : double
+  +NotaDevPersonagens : double
+  +NotaConstrucaoMundo : double
+  +NotaTematica : double
+  
+  ' Notas de Execução (0-10)
+  +NotaAtuacao : double
+  +NotaEdicao : double
+  +NotaDirecao : double
+  
+  ' Notas Visuais (0-10)
+  +NotaArte : double
+  +NotaCinematografia : double
+  +NotaCenarios : double
+  +NotaFigurinos : double
+  +NotaEfeitosVisuais : double
+  +NotaQualidadeImagem : double
+
+  ' Notas Auditivas (0-10)
+  +NotaScore : double
+  +NotaEfeitosSonoros : double
+
+  ' Métodos que calculam as médias desta avaliação
+  +GetMediaNarrativa() : double
+  +GetMediaExecucao() : double
+  +GetMediaVisual() : double
+  +GetMediaAuditiva() : double
+  +GetMediaGeral() : double
+}
+
+' ---------- Classes de Equipe ----------
+
+abstract class Equipe {
+  +Id : Guid
+  +NomeCompleto : string
+  +Funcoes : List<string>
 }
 
 class Ator {
-+AtorId
-+Nome
+  +Papel : string
 }
 
-class Integrante {
-+IntegranteId
-+Nome
-+Cargo
+class EquipeTecnica {
 }
 
-class Usuario{
-+UsuarioId
-+Email
-+Senha
-+Favoritos
-+Favoritar()
-+CadastrarMidia()
-}
+' Herança de Equipe
+Equipe <|-- Ator
+Equipe <|-- EquipeTecnica
 
-class Administrador{
-}
+' ---------- Relacionamentos (Associação/Composição) ----------
 
-class Avaliacao{
-string Usuario(talvez)
-double +Narrativa
-double +Trama
-double +Ritmo
-double +Personagens
-double +ConstrucaoDeMundo
-double +TematicaEMensagem
-double +Execucao
-double +Edicao
-double +Direcao
-double +Atuacao
-double +ComponentesVisuais
-double +DirecaoDeArte
-double +Cinematrografia
-double +CenariosEAmbientes
-double +FigurinoEMaquiagem
-double +EfeitosVisuais
-double +QualidadeDeAnimacao
-double +ComponentesAuditivos
-double +ScoreESoundtrack
-double +EfeitosSonoros
+' Usuário
+Usuario "1" *-- "0..*" Avaliacao : Possui >
+Usuario "1..*" -- "0..*" Mídia : Favoritos >
 
-+CalculaNarrativa()
-+CalculaExecucao()
-+CalculaComponentesVisuais()
-+CalculaComponentesAuditivos()
-}
+' Mídia
+Mídia "1" o-- "0..*" Equipe : "Contém"
 
-Serie --> Temporada
-Temporada --> Episodio
-Midia --> Avaliacao
-Avaliacao --> Usuario
-Usuario <|-- Administrador
-Midia <|-- Filme
-Midia <|-- Serie
-Midia --> Ator
-Midia --> Integrante
+' Série / Temporada / Episódio
+Série "1" *-- "1..*" Temporada : Possui >
+Temporada "1" *-- "1..*" Episódio : Possui >
+
+' Avaliáveis (Relação de Composição)
+' Um Filme "possui" avaliações
+Filme "1" *-- "0..*" Avaliacao : Recebe >
+' Uma Temporada "possui" avaliações
+Temporada "1" *-- "0..*" Avaliacao : Recebe >
+' Uma Avaliação pertence a um Usuário
+Avaliacao "0..*" -- "1" Usuario : Feita por >
 
 @enduml
