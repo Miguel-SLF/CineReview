@@ -2,19 +2,18 @@
 {
     public interface IAvaliavel
     {
-        //Por que as propriedades são abstratas? Não são apenas métodos que fariam isso?
-        public List<Avaliacao> Avaliacoes { get; set; }
-        abstract double NotaMediaGeral { get; }
-        abstract double NotaMediaNarrativa { get; }
-        abstract double NotaMediaExecucao { get; }
-        abstract double NotaMediaVisual { get; }
-        abstract double NotaMediaAuditiva { get; }
+        List<Avaliacao> Avaliacoes { get; }
+        double NotaMediaGeral { get; }
+        double NotaMediaNarrativa { get; }
+        double NotaMediaExecucao { get; }
+        double NotaMediaVisual { get; }
+        double NotaMediaAuditiva { get; }
 
-        //Construtor???
+        /*As propriedades acima (abstratas) são para serem implementadas,
+        na classe Filme e Temporada, a última não é uma classe filha de Midia, por isso a interface*/
+        //Interface não é instanciada, por tanto não precisa de construtor
 
         //Métodos
-        /*public void AdicionarAvaliacao(Avaliacao avaliacao)
-        {
-        }*/
+        void AdicionarAvaliacao(Avaliacao avaliacao);
     }
 }

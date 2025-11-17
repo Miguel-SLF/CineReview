@@ -10,7 +10,7 @@
         //Construtor
         public Usuario(string nomeUsuario, string email, string senhaHash)
         {
-            Id = new Guid(nomeUsuario);
+            Id = Guid.NewGuid();
             NomeUsuario = nomeUsuario;
             Email = email;
             SenhaHash = senhaHash;
