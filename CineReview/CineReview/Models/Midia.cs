@@ -14,6 +14,7 @@
         public abstract double NotaMediaExecucao { get; }
         public abstract double NotaMediaVisual { get; }
         public abstract double NotaMediaAuditiva { get; }
+        public List<Equipe> Equipe { get; private set; }
 
         //Construtor ???
         public Midia(string titulo, string genero, string sinopse, TimeSpan duracao, string classificacaoIndicativa, DateOnly dataLancamento) 
@@ -25,6 +26,7 @@
             Duracao = duracao;
             ClassificacaoIndicativa = classificacaoIndicativa;
             DataLancamento = dataLancamento;
+            Equipe = new List<Equipe>();
         }
     }
 }

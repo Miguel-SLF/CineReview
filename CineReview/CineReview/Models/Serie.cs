@@ -13,9 +13,12 @@ namespace CineReview.Models
 
         public override double NotaMediaAuditiva { get; }
 
+        public List<Temporada> Temporadas { get; private set; }
+
         //Construtor
         public Serie(string titulo, string genero, string sinopse, TimeSpan duracao, string classificacaoIndicativa, DateOnly dataLancamento) : base(titulo, genero, sinopse, duracao, classificacaoIndicativa, dataLancamento)
         {
+            Temporadas = new List<Temporada>();
         }
     }
 }
