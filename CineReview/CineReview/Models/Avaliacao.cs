@@ -1,4 +1,6 @@
-﻿namespace CineReview.Models
+﻿using System.Transactions;
+
+namespace CineReview.Models
 {
     public class Avaliacao
     {
@@ -6,6 +8,8 @@
         public DateTime DataAvaliacao { get; private set; }
         public Guid UsuarioId { get; private set; }
         public Usuario Usuario { get; private set; }
+
+        //PRECISA MUDAR TUDO PARA INT DEPOIS
 
         //Notas de Narrativa (0-10)
         public double NotaTrama { get; set; }
@@ -64,26 +68,31 @@
         }
 
         //Métodos
-        /*public double GetMediaNarrativa()
+        public double GetMediaNarrativa()
         {
-
+            double media = (NotaTrama + NotaRitmo + NotaDevPersonagens + NotaConstrucaoMundo + NotaTematica) / 5;
+            return Math.Round(media, 2);
         }
         public double GetMediaExecucao()
         {
-
+            double media = (NotaAtuacao + NotaEdicao + NotaDirecao) / 3;
+            return Math.Round(media, 2);
         }
         public double GetMediaVisual()
         {
-
+            double media = (NotaArte + NotaCinematografia + NotaCenarios + NotaFigurinos + NotaEfeitosVisuais + NotaQualidadeImagem) / 6;
+            return Math.Round(media, 2);
         }
         public double GetMediaAuditiva()
         {
-
+            double media = (NotaScore + NotaEfeitosSonoros) / 2;
+            return Math.Round(media, 2);
         }
         public double GetMediaGeral()
         {
-
-        }*/
+            double media = (GetMediaNarrativa() + GetMediaExecucao() + GetMediaVisual() + GetMediaAuditiva()) / 4;
+            return Math.Round(media, 2);
+        }
 
     }
 }
