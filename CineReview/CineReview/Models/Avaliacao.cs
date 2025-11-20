@@ -9,6 +9,7 @@ namespace CineReview.Models
         public Guid Id { get; private set; }
         public DateTime DataAvaliacao { get; private set; }
         public Guid UsuarioId { get; private set; }
+        public Guid AvaliadoId { get; private set; }
         public Usuario Usuario
         {
             get => _usuario;
@@ -176,7 +177,7 @@ namespace CineReview.Models
         }
 
         //Construtor
-        public Avaliacao(Usuario usuario,
+        public Avaliacao(Usuario usuario, Guid avaliadoId,
             int notaTrama, int notaRitmo, int notaDevPersonagens, int notaConstrucaoMundo, int notaTematica,
             int notaAtuacao, int notaEdicao, int notaDirecao,
             int notaArte, int notaCinematografia, int notaCenarios, int notaFigurinos, int notaEfeitosVisuais, int notaQualidadeImagem,
@@ -189,6 +190,7 @@ namespace CineReview.Models
             Usuario = usuario;
             UsuarioId = usuario.Id;
 
+            AvaliadoId = avaliadoId;
             NotaTrama = notaTrama;
             NotaRitmo = notaRitmo;
             NotaDevPersonagens = notaDevPersonagens;
